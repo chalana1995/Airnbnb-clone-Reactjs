@@ -4,6 +4,7 @@ import { useState } from 'react';
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css'; // theme css file
 import { DateRangePicker } from 'react-date-range';
+import { useRouter } from 'next/dist/client/router';
 
 function Header() {
 
@@ -11,6 +12,7 @@ function Header() {
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date());
     const [noOfGuest, setNoOfGuest] = useState(1);
+    const router = useRouter();
 
     const resetInput = () => {
         setSearchInput("")
@@ -19,6 +21,18 @@ function Header() {
     const handleSelect = (ranges) => {
         setStartDate(ranges.selection.startDate)
         setEndDate(ranges.selection.endDate)
+    }
+
+    const search = () => {
+        router.push({
+            pathname: "/search",
+            query: {
+                location:searchInput,
+                startDate: startDate.toISOString(),
+                endDate: endDate.toISOString(),
+                noOfGuest
+            }
+        })
     }
 
     const selectionRange = {
@@ -30,7 +44,7 @@ function Header() {
     return (
         <header className="sticky top-0 z-50 grid grid-cols-3 bg-white shadow-md p-5 md:px-10">
             {/* Left */}
-            <div className="relative flex items-start h-10 cursor-pointer my-auto">
+            <div onClick={() => router.push('/')} className="relative flex items-start h-10 cursor-pointer my-auto">
                 <Image
                     src="https://links.papareact.com/qd3"
                     layout="fill"
@@ -76,7 +90,7 @@ function Header() {
                         </div>
                         <div className="flex">
                             <button onClick={resetInput} className="flex-grow text-gray-500">Cancel</button>
-                            <button className="flex-grow text-red-400">Search</button>
+                            <button onClick={search} className="flex-grow text-red-400">Search</button>
                         </div>
                     </div>
                 )}
